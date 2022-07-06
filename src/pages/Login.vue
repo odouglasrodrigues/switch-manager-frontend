@@ -10,9 +10,9 @@
       <h3>Login</h3>
       <div class="input-form">
 
-        <q-input class="input-email" v-model="email" filled type="email" label="E-mail" />
+        <q-input class="input-email" v-model=email filled type="email" label="E-mail" />
 
-        <q-input v-model="password" filled :type="isPwd ? 'password' : 'text'" label="Senha">
+        <q-input v-model=password filled :type="isPwd ? 'password' : 'text'" label="Senha">
           <template v-slot:append>
             <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
           </template>
@@ -20,7 +20,7 @@
 
       </div>
       <div class="submit-form">
-        <q-btn color="primary" icon="login" label="Entrar" @click="onClick" />
+        <q-btn color="primary" icon="login" label="Entrar" @click=SubmitLogin />
       </div>
       <div class="footer">
         Versão: {{ version }}
@@ -30,18 +30,55 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-export default {
+import { defineComponent, ref } from 'vue'
+import swal from 'sweetalert';
+import { PostData } from '../methods/ApiCommunication'
+export default defineComponent({
   name: 'Login',
   setup() {
     return {
       version: '1.0.0',
-      password: ref(''),
       isPwd: ref(true),
       email: ref(''),
+      password: ref('')
+    }
+  },
+  data() {
+    return {
     }
   }
-}
+  ,
+  methods: {
+    async SubmitLogin() {
+      try {
+        const datapost = {
+          password: this.password,
+          email: this.email
+        };
+        const response = await PostData('/login', JSON.stringify(datapost))
+
+        const {jwt} = response.dados
+        localStorage.setItem('jwt', jwt);
+
+        if (jwt) {
+          swal({
+            title: 'Sucesso!',
+            text: 'Usuário(a) logado com sucesso!',
+            icon: 'success',
+          });
+          this.$router.push('/');
+        }
+      } catch (error) {
+        swal({
+          title: 'Oops!',
+          text: 'Alguma coisa deu errado aqui!',
+          icon: 'error',
+        });
+        this.$router.push('/login');
+      }
+    }
+  }
+})
 </script>
 
 <style>
@@ -59,6 +96,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  position: relative;
 }
 
 .login-form {
