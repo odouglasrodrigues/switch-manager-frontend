@@ -9,10 +9,10 @@
           </q-avatar>
           Switch Manager
         </q-toolbar-title>
-        <q-btn color="primary" icon="logout" @click="onClick">
-        <q-tooltip >
-          Sair
-        </q-tooltip>
+        <q-btn color="primary" icon="logout" @click="Logout">
+          <q-tooltip>
+            Sair
+          </q-tooltip>
         </q-btn>
       </q-toolbar>
 
@@ -39,11 +39,17 @@ export default defineComponent({
 
   components: {},
 
-  setup () {
+  setup() {
 
     return {
-      }
+    }
+  },
+  methods: {
+    async Logout() {
+      this.$q.localStorage.remove('jwt')
+      this.$router.push('/login')
     }
   }
+}
 )
 </script>

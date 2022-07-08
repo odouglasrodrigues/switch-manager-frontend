@@ -58,7 +58,7 @@ export default defineComponent({
         const response = await PostData('/login', JSON.stringify(datapost))
 
         const {jwt} = response.dados
-        localStorage.setItem('jwt', jwt);
+        this.$q.localStorage.set('jwt', jwt)
 
         if (jwt) {
           swal({
