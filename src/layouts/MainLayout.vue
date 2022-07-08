@@ -17,7 +17,7 @@
       </q-toolbar>
 
       <q-tabs align="center">
-        <q-route-tab to="/page1" label="Swicthes" />
+        <q-route-tab to="/" label="Swicthes" />
         <q-route-tab to="/page2" label="Cadastrar Switch" />
         <q-route-tab to="/page3" label="Cadastar Usuário" />
       </q-tabs>
@@ -33,7 +33,6 @@
 <script>
 import { defineComponent, ref } from 'vue'
 
-
 export default defineComponent({
   name: 'MainLayout',
 
@@ -48,7 +47,9 @@ export default defineComponent({
     async Logout() {
       this.$q.localStorage.remove('jwt')
       this.$router.push('/login')
-    }
+    },
+  },
+  async beforeMount() {
   }
 }
 )

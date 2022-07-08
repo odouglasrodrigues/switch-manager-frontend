@@ -27,3 +27,29 @@ export const PostData = async (url, dados, token) => {
   }
 
 }
+
+/**
+ *
+ * @param {string} url Url (EndPoint) da API onde será feito o GET
+ * @param {string} token Token de autorização JWT
+ * @returns {Object} Essa função retornará um JSON contendo o status da requisição, e os dados em caso de sucesso
+ */
+ export const GetData = async (url, token) => {
+  try {
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+    const response = await api.get(url, { headers })
+    const data = response.data;
+
+  if (data.status == "sucesso") {
+    return data;
+  } else if (data.status == "erro") {
+    throw data;
+  }
+  } catch (error) {
+    return { status: 'erro', message: 'Ocorreu um erro interno.', data: error }
+  }
+
+}
