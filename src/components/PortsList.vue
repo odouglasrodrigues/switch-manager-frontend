@@ -34,8 +34,8 @@
                     <q-card v-for="port in geInterfaces" :key="port" class="my-card text-white"
                       :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
                       <q-card-section>
-                        <div class="text-h6">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle2">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
+                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
@@ -53,8 +53,8 @@
                     <q-card v-for="port in XgeInterfaces" :key="port" class="my-card text-white"
                       :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
                       <q-card-section>
-                        <div class="text-h6">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle2">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
+                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
@@ -73,12 +73,12 @@
                     <q-card v-for="port in ge40Interfaces" :key="port" class="my-card text-white"
                       :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
                       <q-card-section>
-                        <div class="text-h6">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle2">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
+                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
-                        <q-btn flat>Status</q-btn>
+                        <q-btn class="btn-action" flat>Status</q-btn>
                       </q-card-actions>
                     </q-card>
                   </div>
@@ -172,4 +172,10 @@ export default defineComponent({
 </script>
 
 <style>
+.text-subtitle4{
+  font-size: .9em;
+}
+.btn-action{
+  font-size: .9em;
+}
 </style>
