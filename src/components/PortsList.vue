@@ -58,7 +58,12 @@
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
-                        <q-btn flat>Status</q-btn>
+                        <q-btn flat
+                          @click="cardPortStatus = !cardPortStatus; GetPortStatus(port[Object.keys(port)[0]])">Status
+                        </q-btn>
+                        <PortStatus :cardPortStatus="cardPortStatus"
+                          v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
+                          :portStatus="interfaceStatus" />
                       </q-card-actions>
                     </q-card>
                   </div>
@@ -106,8 +111,9 @@
 import { defineComponent, ref } from 'vue'
 import swal from 'sweetalert';
 import { PostData } from '../methods/ApiCommunication'
+import PortStatus from './PortStatus.vue'
 export default defineComponent({
-  name: 'PortsList',
+  name: "PortsList",
   props: {
     cardPortList: Boolean,
     sw: Object,
@@ -116,66 +122,89 @@ export default defineComponent({
   },
   setup() {
     return {
-      tab: ref('1ge'),
-      splitterModel: ref(20)
-    }
+      tab: ref("10ge"),
+      splitterModel: ref(20),
+      cardPortStatus: ref(false),
+      loadingStatus: ref(false)
+    };
   },
   data() {
     return {
-    }
-  }
-  ,
+      interfaceStatus: {}
+    };
+  },
   methods: {
     CloseCardPortsList() {
-      this.$emit('CloseCardPortsList')
+      this.$emit("CloseCardPortsList");
     },
     cardColor(status) {
       if (status == "UP") {
-        return 'green'
+        return "green";
       }
-      return 'red'
-    }
+      return "red";
+    },
+    async GetPortStatus(interfaceName) {
+      try {
+        this.loadingStatus = true
+        const tokenJwt = this.$q.localStorage.getItem('jwt')
+
+        const datapost = {
+          ip: this.sw.ip, user: this.sw.user, password: this.sw.password, port: this.sw.port, interface: interfaceName
+        }
+        const response = await PostData('/getinterfacedetail', JSON.stringify(datapost), tokenJwt)
+        this.interfaceStatus = response.dados
+        this.loadingStatus = false
+
+      } catch (error) {
+        swal({
+          title: 'Oops!',
+          text: 'Alguma coisa deu errado aqui!',
+          icon: 'error',
+        });
+      }
+    },
   },
   async created() {
   },
   computed: {
     geInterfaces: function () {
       return this.interfaces.filter(port => {
-        let regex = /^Giga/gi
-        let name = Object.keys(port)
+        let regex = /^Giga/gi;
+        let name = Object.keys(port);
         if (regex.test(name)) {
-          return port
+          return port;
         }
-      })
+      });
     },
     XgeInterfaces: function () {
       return this.interfaces.filter(port => {
-        let regex = /^XGiga/gi
-        let name = Object.keys(port)
+        let regex = /^XGiga/gi;
+        let name = Object.keys(port);
         if (regex.test(name)) {
-          return port
+          return port;
         }
-      })
+      });
     },
     ge40Interfaces: function () {
       return this.interfaces.filter(port => {
-        let regex = /^40G/gi
-        let name = Object.keys(port)
+        let regex = /^40G/gi;
+        let name = Object.keys(port);
         if (regex.test(name)) {
-          return port
+          return port;
         }
-      })
+      });
     },
-
-  }
+  },
+  components: { PortStatus }
 })
 </script>
 
 <style>
-.text-subtitle4{
+.text-subtitle4 {
   font-size: .9em;
 }
-.btn-action{
+
+.btn-action {
   font-size: .9em;
 }
 </style>
