@@ -7,10 +7,12 @@
         <div class="text-subtitle2">IP: {{ sw.ip }}</div>
       </q-card-section>
       <q-separator dark />
-      <q-card-actions>
-        <q-btn flat>Listar Portas</q-btn>
+      <q-card-actions vertical>
+        <q-btn flat @click="selectedSwitch = sw; cardPortList = !cardPortList; GetPortList(sw)">Listar Portas</q-btn>
       </q-card-actions>
     </q-card>
+    <PortsList :cardPortList="cardPortList" :sw="selectedSwitch" :loadingPorts="loadingPorts" :interfaces="interfaces"
+      v-on:CloseCardPortsList="cardPortList = !cardPortList" />
 
   </div>
 
@@ -19,26 +21,50 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import swal from 'sweetalert';
-import { GetData } from '../methods/ApiCommunication'
+import { GetData, PostData } from '../methods/ApiCommunication'
+import PortsList from 'src/components/PortsList.vue';
 export default defineComponent({
-  name: 'SwitchesList',
+  name: "SwitchesList",
   setup() {
     return {
-    }
+      cardPortList: ref(false),
+      loadingPorts: ref(false)
+    };
   },
   data() {
     return {
-      switches: []
-    }
-  }
-  ,
+      switches: [],
+      selectedSwitch: null
+    };
+  },
   methods: {
     async GetSwitchList() {
       try {
+        const tokenJwt = this.$q.localStorage.getItem("jwt");
+        const response = await GetData("/listdevices", tokenJwt);
+        const { SwitchList } = response.dados;
+        this.switches = SwitchList;
+      }
+      catch (error) {
+        swal({
+          title: "Oops!",
+          text: "Alguma coisa deu errado aqui!",
+          icon: "error",
+        });
+      }
+    },
+    async GetPortList(sw) {
+      try {
+        this.loadingPorts = true
         const tokenJwt = this.$q.localStorage.getItem('jwt')
-        const response = await GetData('/listdevices', tokenJwt)
-        const { SwitchList } = response.dados
-        this.switches = SwitchList
+
+        const datapost = {
+          ip: sw.ip, user: sw.user, password: sw.password, port: sw.port
+        }
+        const response = await PostData('/listinterfaces', JSON.stringify(datapost), tokenJwt)
+        const { interfaces } = response.dados
+        this.interfaces = interfaces
+        this.loadingPorts = false
 
       } catch (error) {
         swal({
@@ -47,11 +73,12 @@ export default defineComponent({
           icon: 'error',
         });
       }
-    }
+    },
   },
   async created() {
-    await this.GetSwitchList()
-  }
+    await this.GetSwitchList();
+  },
+  components: { PortsList }
 })
 </script>
 
