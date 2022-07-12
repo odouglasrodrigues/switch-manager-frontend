@@ -39,7 +39,12 @@
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
-                        <q-btn flat>Status</q-btn>
+                        <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
+                          Status
+                        </q-btn>
+                        <PortStatus :cardPortStatus="cardPortStatus"
+                          v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
+                          :portStatus="interfaceStatus" :interfaceName="interfacename" :sw="sw" />
                       </q-card-actions>
                     </q-card>
                   </div>
@@ -50,7 +55,7 @@
                   <div class="text-h4 q-mb-md">Portas de 10 Gbps</div>
 
                   <div class="q-pa-md row items-start q-gutter-md">
-                    <q-card v-for="port in XgeInterfaces" :key="port" class="my-card text-white"
+                    <q-card v-for="port in XgeInterfaces" :key="Object.keys(port)[0]" class="my-card text-white"
                       :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
                       <q-card-section>
                         <div class="text-h7">{{ Object.keys(port)[0] }}</div>
@@ -58,12 +63,12 @@
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
-                        <q-btn flat
-                          @click="cardPortStatus = !cardPortStatus; GetPortStatus(port[Object.keys(port)[0]])">Status
+                        <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
+                          Status
                         </q-btn>
                         <PortStatus :cardPortStatus="cardPortStatus"
                           v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
-                          :portStatus="interfaceStatus" />
+                          :portStatus="interfaceStatus" :interfaceName="interfacename" :sw="sw" />
                       </q-card-actions>
                     </q-card>
                   </div>
@@ -83,7 +88,12 @@
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
-                        <q-btn class="btn-action" flat>Status</q-btn>
+                        <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
+                          Status
+                        </q-btn>
+                        <PortStatus :cardPortStatus="cardPortStatus"
+                          v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
+                          :portStatus="interfaceStatus" :interfaceName="interfacename" :sw="sw" />
                       </q-card-actions>
                     </q-card>
                   </div>
@@ -130,7 +140,9 @@ export default defineComponent({
   },
   data() {
     return {
-      interfaceStatus: {}
+      interfaceStatus: {},
+      swData: this.sw,
+      interfacename: null
     };
   },
   methods: {
@@ -147,7 +159,7 @@ export default defineComponent({
       try {
         this.loadingStatus = true
         const tokenJwt = this.$q.localStorage.getItem('jwt')
-
+        this.interfacename = interfaceName
         const datapost = {
           ip: this.sw.ip, user: this.sw.user, password: this.sw.password, port: this.sw.port, interface: interfaceName
         }
