@@ -17,11 +17,11 @@ export const PostData = async (url, dados, token) => {
     const response = await api.post(url, dados, { headers })
     const data = response.data;
 
-  if (data.status == "sucesso") {
-    return data;
-  } else if (data.status == "erro") {
-    throw data;
-  }
+    if (data.status == "sucesso") {
+      return data;
+    } else if (data.status == "erro") {
+      return data;
+    }
   } catch (error) {
     return { status: 'erro', message: 'Ocorreu um erro interno.', data: error }
   }
@@ -34,7 +34,7 @@ export const PostData = async (url, dados, token) => {
  * @param {string} token Token de autorização JWT
  * @returns {Object} Essa função retornará um JSON contendo o status da requisição, e os dados em caso de sucesso
  */
- export const GetData = async (url, token) => {
+export const GetData = async (url, token) => {
   try {
     const headers = {
       'Authorization': 'Bearer ' + token,
@@ -43,11 +43,11 @@ export const PostData = async (url, dados, token) => {
     const response = await api.get(url, { headers })
     const data = response.data;
 
-  if (data.status == "sucesso") {
-    return data;
-  } else if (data.status == "erro") {
-    throw data;
-  }
+    if (data.status == "sucesso") {
+      return data;
+    } else if (data.status == "erro") {
+      return data;
+    }
   } catch (error) {
     return { status: 'erro', message: 'Ocorreu um erro interno.', data: error }
   }
