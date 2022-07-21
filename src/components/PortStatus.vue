@@ -1,9 +1,9 @@
 <template>
 
   <q-dialog v-model="cardPortStatus" persistent>
-    <q-card style="width: 100%; min-width: 50vw;  ">
+    <q-card style="width: 30vw;">
       <q-card-section>
-        <div class="text-h6">Status - {{interfaceName}}</div>
+        <div class="text-h6">Status - {{ interfaceName }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
@@ -13,16 +13,20 @@
           <h4>Carregando...</h4>
         </div>
 
-        <div v-else>
-          <span v-if="portStatus.interfaceStatus == 'on'" class="port-status">Porta Ligada: </span>
-          <span v-else class="port-status">Porta Desligada: </span>
-          <q-btn v-if="loadingStatusPortChange" color="blue" label="Carregando... ">
-            <q-spinner-gears left color="white" size="1em" />
-          </q-btn>
-          <q-btn v-else-if="portStatus.interfaceStatus == 'on'" color="red" label="Desligar"
-            @click="TurnOnOffInterface('turnoff')" />
-          <q-btn v-else-if="portStatus.interfaceStatus == 'off'" color="green" label="Ligar"
-            @click="TurnOnOffInterface('turnon')" />
+        <div v-else class="q-pa-md row justify-center q-gutter-md">
+          <div class="port-status">
+            <q-btn v-if="loadingStatusPortChange" color="blue" label="Carregando... ">
+              <q-spinner-gears left color="white" size="1em" />
+            </q-btn>
+            <q-btn v-else-if="portStatus.interfaceStatus == 'on'" color="red" label="DESLIGAR PORTA"
+              @click="TurnOnOffInterface('turnoff')" />
+            <q-btn v-else-if="portStatus.interfaceStatus == 'off'" color="green" label="LIGAR PORTA"
+              @click="TurnOnOffInterface('turnon')" />
+          </div>
+          <div class="port-status">
+            <q-btn color="primary" label="MONITORAR SINAL" @click="MonitorarSinal" />
+          </div>
+
         </div>
 
       </q-card-section>
@@ -32,6 +36,8 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <TransceiverMonitoring :cardTransceiverStatus="cardTransceiverStatus" :interfaceName="interfaceName"
+    :transceiverIsPresent="portStatus.transceiverIsPresent" v-on:CloseCardTransceiver="cardTransceiverStatus = false" />
 
 </template>
 
@@ -39,8 +45,9 @@
 import { defineComponent, ref } from 'vue'
 import swal from 'sweetalert';
 import { PostData } from '../methods/ApiCommunication'
+import TransceiverMonitoring from './TransceiverMonitoring.vue';
 export default defineComponent({
-  name: 'PortStatus',
+  name: "PortStatus",
   props: {
     cardPortStatus: Boolean,
     loadingStatus: Boolean,
@@ -50,54 +57,36 @@ export default defineComponent({
   },
   setup() {
     return {
-      tab: ref('1ge'),
+      tab: ref("1ge"),
       splitterModel: ref(20),
-      loadingStatusPortChange: ref(false)
-    }
+      loadingStatusPortChange: ref(false),
+      cardTransceiverStatus: ref(false)
+    };
   },
   data() {
-    return {
-
-    }
-  }
-  ,
+    return {};
+  },
   methods: {
     CloseCardPortStatus() {
-      this.$emit('CloseCardPortStatus')
+      this.$emit("CloseCardPortStatus");
     },
-    cardColor(status) {
-      if (status == "UP") {
-        return 'green'
-      }
-      return 'red'
-    },
-    async TurnOnOffInterface(turnONOFF) {
+    async MonitorarSinal() {
       try {
-        this.loadingStatusPortChange = true
-        const tokenJwt = this.$q.localStorage.getItem('jwt')
-
-        const datapost = {
-          ip: this.sw.ip, user: this.sw.user, password: this.sw.password, port: this.sw.port, interface: this.interfaceName, turnonoff: turnONOFF
+        this.cardTransceiverStatus = true
+        if(this.portStatus.transceiverIsPresent=='yes'){
+          this.$socket.emit('StartMonitoring', `{ip:${this.sw.ip}, user:${this.sw.user}, pass:${this.sw.password}, port:${this.sw.port}, interface:${this.interfaceName}, tempo:10}`)
         }
-        const response = await PostData('/turnonoffinterface', JSON.stringify(datapost), tokenJwt)
-        console.log(response.dados)
-        this.portStatus.interfaceStatus = response.dados.interfaceStatus
-        this.loadingStatusPortChange = false
+      }
+      catch (error) {
 
-      } catch (error) {
-        console.log('erro', error)
-        swal({
-          title: 'Oops!',
-          text: 'Alguma coisa deu errado aqui!',
-          icon: 'error',
-        });
       }
     },
   },
   async created() {
+    this.$socket.emit("criado", "Deu certo!");
   },
-  computed: {
-  }
+  computed: {},
+  components: { TransceiverMonitoring }
 })
 </script>
 
