@@ -1,16 +1,18 @@
 <template>
 
   <q-dialog v-model="cardPortStatus" persistent>
-    <q-card style="width: 30vw;">
+    <q-card style="max-width: 90vw;">
       <q-card-section>
-        <div class="text-h6">Status - {{ interfaceName }}</div>
+        <div style="font-size:clamp(1.2em, 5vw, 2em);">Status - {{ interfaceName }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
 
         <div v-if="loadingStatus" class="loading" align="center">
-          <q-spinner-pie color="primary" size="6em" />
-          <h4>Carregando...</h4>
+          <q-spinner-pie color="primary" size="8vw" />
+          <div style="width: 50vw; font-size: 5vw;">
+            Carregando...
+          </div>
         </div>
 
         <div v-else class="q-pa-md row justify-center q-gutter-md">
@@ -37,7 +39,7 @@
     </q-card>
   </q-dialog>
   <TransceiverMonitoring :cardTransceiverStatus="cardTransceiverStatus" :interfaceName="interfaceName"
-    :transceiverIsPresent="portStatus.transceiverIsPresent" v-on:CloseCardTransceiver="cardTransceiverStatus = false" />
+    :transceiverIsPresent="portStatus.transceiverIsPresent" :loadingTransceiverStatus="loadingTransceiverStatus" v-on:CloseCardTransceiver="cardTransceiverStatus = false" />
 
 </template>
 
@@ -60,7 +62,8 @@ export default defineComponent({
       tab: ref("1ge"),
       splitterModel: ref(20),
       loadingStatusPortChange: ref(false),
-      cardTransceiverStatus: ref(false)
+      cardTransceiverStatus: ref(false),
+      loadingTransceiverStatus: ref(true)
     };
   },
   data() {
@@ -74,17 +77,37 @@ export default defineComponent({
       try {
         this.cardTransceiverStatus = true
         if(this.portStatus.transceiverIsPresent=='yes'){
-          this.$socket.emit('StartMonitoring', `{ip:${this.sw.ip}, user:${this.sw.user}, pass:${this.sw.password}, port:${this.sw.port}, interface:${this.interfaceName}, tempo:10}`)
+          this.$socket.emit('StartMonitoring', {ip:this.sw.ip, user:this.sw.user, pass:this.sw.password, port:this.sw.port, interface:this.interfaceName, tempo:60})
         }
       }
       catch (error) {
 
       }
     },
+    async TurnOnOffInterface(turnONOFF) {
+      try {
+        this.loadingStatusPortChange = true
+        const tokenJwt = this.$q.localStorage.getItem('jwt')
+
+        const datapost = {
+          ip: this.sw.ip, user: this.sw.user, password: this.sw.password, port: this.sw.port, interface: this.interfaceName, turnonoff: turnONOFF
+        }
+        const response = await PostData('/turnonoffinterface', JSON.stringify(datapost), tokenJwt)
+        console.log(response.dados)
+        this.portStatus.interfaceStatus = response.dados.interfaceStatus
+        this.loadingStatusPortChange = false
+
+      } catch (error) {
+        console.log('erro', error)
+        swal({
+          title: 'Oops!',
+          text: 'Alguma coisa deu errado aqui!',
+          icon: 'error',
+        });
+      }
+    },
   },
-  async created() {
-    this.$socket.emit("criado", "Deu certo!");
-  },
+
   computed: {},
   components: { TransceiverMonitoring }
 })

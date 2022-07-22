@@ -1,16 +1,18 @@
 <template>
 
   <q-dialog v-model="cardTransceiverStatus" persistent>
-    <q-card style="max-width: 70vw;">
+    <q-card style="max-width: 90vw;">
       <q-card-section>
-        <div class="text-h6">Sinal - {{ interfaceName }}</div>
+        <div style="font-size:clamp(1.2em, 5vw, 2em);">Sinal - {{ interfaceName }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
 
-        <div v-if="loadingTransceiverStatus" class="loading" align="center">
-          <q-spinner-pie color="primary" size="6em" />
-          <h4>Carregando...</h4>
+        <div v-if="cardLoading" class="loading" align="center">
+          <q-spinner-pie color="primary" size="8vw" />
+          <div style="width: 50vw; font-size: 5vw;">
+            Carregando...
+          </div>
         </div>
 
         <div v-else-if="transceiverIsPresent == 'no'" class="fit row  justify-center items-center content-center">
@@ -21,8 +23,23 @@
 
         </div>
 
-        <div v-else class="q-pa-md row items-start q-gutter-md">
-          <h2>SFP Presente</h2>
+        <div v-else class="q-pa-md row justify-center q-gutter-md">
+
+          <q-card :class="cardSinalBackgroud + ' text-black'">
+            <q-card-section style="font-weight: bold;">
+              <div style="font-size:clamp(1em, 5vw, 1.5em);">RX - Sinal</div>
+            </q-card-section>
+            <q-separator inset color="white" />
+            <q-card-section>
+              Sinal: {{ rx.sinal }}
+            </q-card-section>
+            <q-card-section>
+              Status: {{ cardSinalStatus }}
+            </q-card-section>
+            <q-card-section>
+              Limite: {{ rx.low }}
+            </q-card-section>
+          </q-card>
 
         </div>
 
@@ -56,13 +73,18 @@ export default defineComponent({
   },
   data() {
     return {
-
+      cardLoading: this.loadingTransceiverStatus,
+      rx: {},
+      tx: {},
+      cardSinalBackgroud: '',
+      cardSinalStatus: ''
     }
   }
   ,
   methods: {
     CloseCardTransceiver() {
       this.$emit('CloseCardTransceiver')
+      this.cardLoading = true
     },
     cardColor(status) {
       if (status == "UP") {
@@ -94,7 +116,27 @@ export default defineComponent({
     },
   },
   async created() {
-    this.$socket.emit('criado', 'Deu certo!')
+    this.$socket.on('RunningMonitoring', msg => {
+      this.cardLoading = false
+      this.rx = msg.rx
+      this.tx = msg.tx
+
+      if (msg.rx.sinal < msg.rx.low) {
+        this.cardSinalBackgroud = 'bg-red'
+        this.cardSinalStatus = 'Péssimo'
+      } else if (msg.rx.sinal >= (msg.rx.low + 6)){
+        this.cardSinalBackgroud = 'bg-green'
+        this.cardSinalStatus = 'Ótimo'
+      } else if (msg.rx.sinal >= (msg.rx.low + 4))  {
+        this.cardSinalBackgroud = 'bg-yellow'
+        this.cardSinalStatus = 'Aceitável'
+      } else if (msg.rx.sinal >= (msg.rx.low + 2)) {
+        this.cardSinalBackgroud = 'bg-orange'
+        this.cardSinalStatus = 'Ruim'
+
+
+      }
+    })
   },
   computed: {
   }

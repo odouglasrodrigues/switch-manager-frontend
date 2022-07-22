@@ -1,16 +1,18 @@
 <template>
 
   <q-dialog v-model="cardPortList" persistent>
-    <q-card style="width: 100%; min-width: 90vw; height: 100%; min-height: 90vh; ">
+    <q-card style=" max-width: 90vw; max-height: 90vh; ">
       <q-card-section>
-        <div class="text-h6">{{ sw.name }}</div>
+        <div style="font-size:clamp(1.2em, 5vw, 2em);">{{ sw.name }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
 
         <div v-if="loadingPorts" class="loading" align="center">
-          <q-spinner-pie color="primary" size="6em" />
-          <h4>Carregando...</h4>
+          <q-spinner-pie color="primary" size="8vw" />
+          <div style="width: 50vw; font-size: 5vw;">
+            Carregando...
+          </div>
         </div>
 
         <div v-else>
@@ -28,11 +30,11 @@
               <q-tab-panels v-model="tab" animated swipeable vertical transition-prev="jump-up"
                 transition-next="jump-up">
                 <q-tab-panel name="1ge">
-                  <div class="text-h4 q-mb-md">Portas de 1 Gbps</div>
+                  <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 1 Gbps</div>
 
                   <div class="q-pa-md row items-start q-gutter-md">
                     <q-card v-for="port in geInterfaces" :key="port" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
                       <q-card-section>
                         <div class="text-h7">{{ Object.keys(port)[0] }}</div>
                         <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
@@ -52,11 +54,11 @@
                 </q-tab-panel>
 
                 <q-tab-panel name="10ge">
-                  <div class="text-h4 q-mb-md">Portas de 10 Gbps</div>
+                  <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 10 Gbps</div>
 
                   <div class="q-pa-md row items-start q-gutter-md">
                     <q-card v-for="port in XgeInterfaces" :key="Object.keys(port)[0]" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
                       <q-card-section>
                         <div class="text-h7">{{ Object.keys(port)[0] }}</div>
                         <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
@@ -77,11 +79,11 @@
                 </q-tab-panel>
 
                 <q-tab-panel name="40ge">
-                  <div class="text-h4 q-mb-md">Portas de 40 Gbps</div>
+                  <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 40 Gbps</div>
 
                   <div class="q-pa-md row items-start q-gutter-md">
                     <q-card v-for="port in ge40Interfaces" :key="port" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)};`">
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
                       <q-card-section>
                         <div class="text-h7">{{ Object.keys(port)[0] }}</div>
                         <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
