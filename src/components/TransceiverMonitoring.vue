@@ -55,7 +55,6 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { PostData } from '../methods/ApiCommunication'
 export default defineComponent({
   name: 'TransceiverMonitoring',
   props: {
@@ -86,55 +85,26 @@ export default defineComponent({
       this.$emit('CloseCardTransceiver')
       this.cardLoading = true
     },
-    cardColor(status) {
-      if (status == "UP") {
-        return 'green'
-      }
-      return 'red'
-    },
-    async TurnOnOffInterface(turnONOFF) {
-      try {
-        this.loadingStatusPortChange = true
-        const tokenJwt = this.$q.localStorage.getItem('jwt')
-
-        const datapost = {
-          ip: this.sw.ip, user: this.sw.user, password: this.sw.password, port: this.sw.port, interface: this.interfaceName, turnonoff: turnONOFF
-        }
-        const response = await PostData('/turnonoffinterface', JSON.stringify(datapost), tokenJwt)
-        console.log(response.dados)
-        this.portStatus.interfaceStatus = response.dados.interfaceStatus
-        this.loadingStatusPortChange = false
-
-      } catch (error) {
-        console.log('erro', error)
-        swal({
-          title: 'Oops!',
-          text: 'Alguma coisa deu errado aqui!',
-          icon: 'error',
-        });
-      }
-    },
   },
   async created() {
     this.$socket.on('RunningMonitoring', msg => {
       this.cardLoading = false
-      this.rx = msg.rx
-      this.tx = msg.tx
+      this.rx = msg.msg.rx
+      this.tx = msg.msg.tx
 
-      if (msg.rx.sinal < msg.rx.low) {
+
+      if (msg.msg.rx.sinal < msg.msg.rx.low) {
         this.cardSinalBackgroud = 'bg-red'
         this.cardSinalStatus = 'Péssimo'
-      } else if (msg.rx.sinal >= (msg.rx.low + 6)){
+      } else if (msg.msg.rx.sinal >= (msg.msg.rx.low + 6)) {
         this.cardSinalBackgroud = 'bg-green'
         this.cardSinalStatus = 'Ótimo'
-      } else if (msg.rx.sinal >= (msg.rx.low + 4))  {
+      } else if (msg.msg.rx.sinal >= (msg.msg.rx.low + 4)) {
         this.cardSinalBackgroud = 'bg-yellow'
         this.cardSinalStatus = 'Aceitável'
-      } else if (msg.rx.sinal >= (msg.rx.low + 2)) {
+      } else if (msg.msg.rx.sinal >= (msg.msg.rx.low + 2)) {
         this.cardSinalBackgroud = 'bg-orange'
         this.cardSinalStatus = 'Ruim'
-
-
       }
     })
   },

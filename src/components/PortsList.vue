@@ -27,22 +27,23 @@
             </template>
 
             <template v-slot:after>
-              <q-tab-panels v-model="tab" animated swipeable vertical transition-prev="jump-up"
-                transition-next="jump-up">
+              <q-tab-panels v-model="tab" animated vertical transition-prev="jump-up" transition-next="jump-up">
                 <q-tab-panel name="1ge">
                   <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 1 Gbps</div>
 
-                  <div class="q-pa-md row items-start q-gutter-md">
+                  <div class="q-pa-ls row items-start q-gutter-xs">
                     <q-card v-for="port in geInterfaces" :key="port" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width:clamp(30vw, 40vw, 45vw);`">
                       <q-card-section>
-                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div style="font-size:clamp(.5em, 3.5vw, 1.5em)">{{ Object.keys(port)[0] }}</div>
+                        <div style="font-size:clamp(.4em, 3vw, 1em)">Descrição: {{
+                            port[Object.keys(port)[0]].description
+                        }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
                         <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
-                          Status
+                          <div style="font-size:clamp(.4em, 3vw, 1em)">Status</div>
                         </q-btn>
                         <PortStatus :cardPortStatus="cardPortStatus"
                           v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
@@ -56,17 +57,19 @@
                 <q-tab-panel name="10ge">
                   <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 10 Gbps</div>
 
-                  <div class="q-pa-md row items-start q-gutter-md">
-                    <q-card v-for="port in XgeInterfaces" :key="Object.keys(port)[0]" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
+                  <div class="q-pa-ls row items-start q-gutter-xs">
+                    <q-card v-for="port in XgeInterfaces" :key="port" class="my-card text-white"
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width:clamp(30vw, 40vw, 45vw);`">
                       <q-card-section>
-                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div style="font-size:clamp(.5em, 3.5vw, 1.5em)">{{ Object.keys(port)[0] }}</div>
+                        <div style="font-size:clamp(.4em, 3vw, 1em)">Descrição: {{
+                            port[Object.keys(port)[0]].description
+                        }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
                         <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
-                          Status
+                          <div style="font-size:clamp(.4em, 3vw, 1em)">Status</div>
                         </q-btn>
                         <PortStatus :cardPortStatus="cardPortStatus"
                           v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
@@ -74,24 +77,24 @@
                       </q-card-actions>
                     </q-card>
                   </div>
-
-
                 </q-tab-panel>
 
                 <q-tab-panel name="40ge">
                   <div class="q-mb-md" style="font-size:clamp(1.5em, 6vw, 2em);">Portas de 40 Gbps</div>
 
-                  <div class="q-pa-md row items-start q-gutter-md">
+                  <div class="q-pa-ls row items-start q-gutter-xs">
                     <q-card v-for="port in ge40Interfaces" :key="port" class="my-card text-white"
-                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width: 40vw;`">
+                      :style="`background: ${cardColor(port[Object.keys(port)[0]].status)}; max-width:clamp(30vw, 40vw, 45vw);`">
                       <q-card-section>
-                        <div class="text-h7">{{ Object.keys(port)[0] }}</div>
-                        <div class="text-subtitle4">Descrição: {{ port[Object.keys(port)[0]].description }}</div>
+                        <div style="font-size:clamp(.5em, 3.5vw, 1.5em)">{{ Object.keys(port)[0] }}</div>
+                        <div style="font-size:clamp(.4em, 3vw, 1em)">Descrição: {{
+                            port[Object.keys(port)[0]].description
+                        }}</div>
                       </q-card-section>
                       <q-separator dark />
                       <q-card-actions vertical>
                         <q-btn flat @click="cardPortStatus = !cardPortStatus; GetPortStatus(Object.keys(port)[0])">
-                          Status
+                          <div style="font-size:clamp(.4em, 3vw, 1em)">Status</div>
                         </q-btn>
                         <PortStatus :cardPortStatus="cardPortStatus"
                           v-on:CloseCardPortStatus='cardPortStatus = !cardPortStatus' :loadingStatus="loadingStatus"
@@ -99,8 +102,6 @@
                       </q-card-actions>
                     </q-card>
                   </div>
-
-
                 </q-tab-panel>
               </q-tab-panels>
             </template>
