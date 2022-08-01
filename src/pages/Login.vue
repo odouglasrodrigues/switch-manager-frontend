@@ -20,7 +20,13 @@
 
       </div>
       <div class="submit-form">
-        <q-btn color="primary" icon="login" label="Entrar" @click=SubmitLogin />
+        <q-btn v-if="!tryToLogin" color="primary" icon="login" label="Entrar" @click=SubmitLogin />
+        <q-btn v-else color="primary" label="Entrando...  " align="left" disable>
+        <q-spinner-gears
+          color="white"
+          size="2rem"
+        />
+        </q-btn>
       </div>
       <div class="footer">
         Versão: {{ version }}
@@ -40,7 +46,8 @@ export default defineComponent({
       version: '1.0.0',
       isPwd: ref(true),
       email: ref(''),
-      password: ref('')
+      password: ref(''),
+      tryToLogin:ref(false)
     }
   },
   data() {
@@ -51,6 +58,7 @@ export default defineComponent({
   methods: {
     async SubmitLogin() {
       try {
+        this.tryToLogin=true
         const datapost = {
           password: this.password,
           email: this.email
@@ -61,6 +69,7 @@ export default defineComponent({
         this.$q.localStorage.set('jwt', jwt)
 
         if (jwt) {
+          this.tryToLogin=false
           swal({
             title: 'Sucesso!',
             text: 'Usuário(a) logado com sucesso!',
@@ -69,6 +78,7 @@ export default defineComponent({
           this.$router.push('/');
         }
       } catch (error) {
+        this.tryToLogin=false
         swal({
           title: 'Oops!',
           text: 'Alguma coisa deu errado aqui!',
