@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import {io} from 'socket.io-client'
 
-const host = process.env.HOST || '192.168.107.228'
+const host = process.env.HOST || '192.168.0.43'
 const socket = io(`http://${host}:5000`)
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$socket

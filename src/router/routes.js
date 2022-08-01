@@ -4,8 +4,16 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/SwitchesList.vue') },
-      { path: '/createswitch', component: () => import('pages/SwitchesCreate.vue') }
+      {
+        path: '', component: () => import('pages/SwitchesList.vue'), meta: {
+          requireAuth: true,
+        },
+      },
+      {
+        path: '/createswitch', component: () => import('pages/SwitchesCreate.vue'), meta: {
+          requireAuth: true,
+        },
+      }
     ]
   },
   {

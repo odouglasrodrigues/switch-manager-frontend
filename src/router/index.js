@@ -26,5 +26,19 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
+  Router.beforeEach((to, from, next) => {
+    if (to.matched.some((record) => record.meta.requireAuth)) {
+      if (localStorage.getItem('jwt') == null) {
+        next({
+          path: '/login',
+        });
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  })
+
   return Router
 })
