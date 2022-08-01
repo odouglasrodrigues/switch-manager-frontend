@@ -23,7 +23,13 @@
 
         </div>
 
-        <div v-else class="q-pa-md row justify-center q-gutter-md">
+        <div v-else class="q-pa-md column justify-center q-gutter-md">
+
+          <div style="font-size:clamp(1em, 4vw, 1.5em); font-weight: 800;" >Tempo restante:
+            <q-circular-progress show-value class="text-light-blue q-ma-md" :value="remaingTime" size="50px"
+              color="light-blue" />
+          </div>
+
 
           <q-card :class="cardSinalBackgroud + ' text-black'">
             <q-card-section style="font-weight: bold;">
@@ -46,7 +52,7 @@
       </q-card-section>
 
       <q-card-actions align="right" class="bg-white text-teal">
-        <q-btn flat label="OK" @click="CloseCardTransceiver" />
+        <q-btn flat label="OK" @click="CloseCardTransceiver" :disable="runningTest" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -76,7 +82,9 @@ export default defineComponent({
       rx: {},
       tx: {},
       cardSinalBackgroud: '',
-      cardSinalStatus: ''
+      cardSinalStatus: '',
+      remaingTime: 64,
+      runningTest: false
     }
   }
   ,
@@ -84,9 +92,27 @@ export default defineComponent({
     CloseCardTransceiver() {
       this.$emit('CloseCardTransceiver')
       this.cardLoading = true
+      this.remaingTime = 64
     },
+    StartCountdown() {
+      if (this.remaingTime >= 1) {
+        setTimeout(() => {
+          this.remaingTime = this.remaingTime - 1
+          this.StartCountdown()
+        }, 1000)
+      }
+
+    }
   },
   async created() {
+    this.$socket.on('TestStarted', msg => {
+      this.StartCountdown()
+      this.runningTest = true
+    })
+    this.$socket.on('TestFinished', msg => {
+      this.runningTest = false
+    })
+
     this.$socket.on('RunningMonitoring', msg => {
       this.cardLoading = false
       this.rx = msg.msg.rx
@@ -109,6 +135,7 @@ export default defineComponent({
     })
   },
   computed: {
+
   }
 })
 </script>
