@@ -111,6 +111,11 @@ export default defineComponent({
     })
     this.$socket.on('TestFinished', msg => {
       this.runningTest = false
+      this.$q.notify({
+          type: 'positive',
+          message: 'Monitoramento de sinal encerrado.',
+          position:'top'
+        })
     })
 
     this.$socket.on('RunningMonitoring', msg => {
