@@ -110,7 +110,7 @@ body {
 }
 
 .login-form {
-  background: rgb(214, 202, 255);
+  background: rgb(255, 255, 255);
   border-radius: 7px;
 }
 

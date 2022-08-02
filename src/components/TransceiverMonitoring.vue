@@ -25,7 +25,7 @@
 
         <div v-else class="q-pa-md column justify-center q-gutter-md">
 
-          <div style="font-size:clamp(1em, 4vw, 1.5em); font-weight: 800;" >Tempo restante:
+          <div style="font-size:clamp(1em, 4vw, 1.5em); font-weight: 800;">Tempo restante:
             <q-circular-progress show-value class="text-light-blue q-ma-md" :value="remaingTime" size="50px"
               color="light-blue" />
           </div>
@@ -36,14 +36,17 @@
               <div style="font-size:clamp(1em, 5vw, 1.5em);">RX - Sinal</div>
             </q-card-section>
             <q-separator inset color="white" />
-            <q-card-section>
-              Sinal: {{ rx.sinal }}
+            <q-card-section class="row">
+              <div class="infoSinal">Sinal: </div>
+              <div class="dataSinal"> {{ rx.sinal }}</div>
             </q-card-section>
-            <q-card-section>
-              Status: {{ cardSinalStatus }}
+            <q-card-section class="row">
+              <div class="infoSinal">Status: </div>
+              <div class="dataSinal">{{ cardSinalStatus }}</div>
             </q-card-section>
-            <q-card-section>
-              Limite: {{ rx.low }}
+            <q-card-section class="row">
+              <div class="infoSinal">Limite: </div>
+              <div class="dataSinal">{{ rx.low }}</div>
             </q-card-section>
           </q-card>
 
@@ -112,10 +115,10 @@ export default defineComponent({
     this.$socket.on('TestFinished', msg => {
       this.runningTest = false
       this.$q.notify({
-          type: 'positive',
-          message: 'Monitoramento de sinal encerrado.',
-          position:'top'
-        })
+        type: 'positive',
+        message: 'Monitoramento de sinal encerrado.',
+        position: 'top'
+      })
     })
 
     this.$socket.on('RunningMonitoring', msg => {
@@ -152,5 +155,14 @@ export default defineComponent({
 
 .btn-action {
   font-size: .9em;
+}
+
+.infoSinal {
+  font-size: 1.1em;
+  font-weight: 500;
+  padding-right: 4px;
+}
+.dataSinal{
+  font-size: 1.1em;
 }
 </style>
