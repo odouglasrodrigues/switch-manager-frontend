@@ -22,10 +22,7 @@
       <div class="submit-form">
         <q-btn v-if="!tryToLogin" color="primary" icon="login" label="Entrar" @click=SubmitLogin />
         <q-btn v-else color="primary" label="Entrando...  " align="left" disable>
-        <q-spinner-gears
-          color="white"
-          size="2rem"
-        />
+          <q-spinner-gears color="white" size="2rem" />
         </q-btn>
       </div>
       <div class="footer">
@@ -47,7 +44,7 @@ export default defineComponent({
       isPwd: ref(true),
       email: ref(''),
       password: ref(''),
-      tryToLogin:ref(false)
+      tryToLogin: ref(false)
     }
   },
   data() {
@@ -58,18 +55,23 @@ export default defineComponent({
   methods: {
     async SubmitLogin() {
       try {
-        this.tryToLogin=true
+        this.tryToLogin = true
         const datapost = {
           password: this.password,
           email: this.email
         };
         const response = await PostData('/login', JSON.stringify(datapost))
 
-        const {jwt} = response.dados
-        this.$q.localStorage.set('jwt', jwt)
+        const { jwt } = response.dados
+
 
         if (jwt) {
-          this.tryToLogin=false
+          this.tryToLogin = false
+          this.$q.localStorage.set('jwt', jwt)
+          this.$q.cookies.set('jwt', jwt, {
+            secure: true,
+            expires: '7h 58s',
+          })
           swal({
             title: 'Sucesso!',
             text: 'Usuário(a) logado com sucesso!',
@@ -78,7 +80,7 @@ export default defineComponent({
           this.$router.push('/');
         }
       } catch (error) {
-        this.tryToLogin=false
+        this.tryToLogin = false
         swal({
           title: 'Oops!',
           text: 'Alguma coisa deu errado aqui!',

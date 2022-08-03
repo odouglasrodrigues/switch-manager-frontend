@@ -47,6 +47,7 @@ export default defineComponent({
     async Logout() {
       this.$q.localStorage.remove('jwt')
       this.$router.push('/login')
+      this.$q.cookies.remove('jwt')
     },
   },
   async beforeMount() {

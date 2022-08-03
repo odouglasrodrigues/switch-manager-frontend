@@ -1,4 +1,5 @@
 import { route } from 'quasar/wrappers'
+import { Cookies } from 'quasar'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 
@@ -28,7 +29,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requireAuth)) {
-      if (localStorage.getItem('jwt') == null) {
+      if (!Cookies.has('jwt')) {
         next({
           path: '/login',
         });
