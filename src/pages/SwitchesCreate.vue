@@ -3,7 +3,7 @@
   <div class="q-pa-md column items-center q-gutter-xs">
     <h4>Cadastrar Switch</h4>
     <div class="form-control">
-      <form @reset.prevent.stop="onReset" class="q-gutter-xs">
+      <form class="q-gutter-xs">
         <q-input v-model="formControl.name" type="text" label="Nome do equipamento" lazy-rules
           :rules="[val => val.length > 0 || 'Campo obrigatório']" />
         <q-input v-model="formControl.ip" type="text" label="IP"
@@ -31,7 +31,7 @@
             <q-spinner color="white" size="1em" :thickness="10" />
           </q-btn>
           <q-btn v-else label="Testar Conexão" @click="TestConnection" color="green" />
-          <q-btn label="Limpar" type="reset" color="red" flat class="q-ml-sm" />
+          <q-btn label="Limpar" color="red" @click="ClearForm" flat class="q-ml-sm" />
         </div>
       </form>
     </div>
@@ -142,6 +142,13 @@ export default defineComponent({
         });
       }
     },
+    ClearForm(){
+      this.formControl.ip=""
+      this.formControl.name=""
+      this.formControl.password=""
+      this.formControl.port=23
+      this.formControl.user=""
+    }
   },
   async created() {
 
