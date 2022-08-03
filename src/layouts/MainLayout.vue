@@ -19,7 +19,7 @@
       <q-tabs align="center">
         <q-route-tab to="/" label="Swicthes" />
         <q-route-tab to="/createswitch" label="Cadastrar Switch" />
-        <q-route-tab to="/page3" label="Cadastar Usuário" />
+        <q-route-tab to="/createuser" label="Cadastar Usuário" />
       </q-tabs>
     </q-header>
 

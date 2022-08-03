@@ -13,6 +13,11 @@ const routes = [
         path: '/createswitch', component: () => import('pages/SwitchesCreate.vue'), meta: {
           requireAuth: true,
         },
+      },
+      {
+        path: '/createuser', component: () => import('pages/UserCreate.vue'), meta: {
+          requireAuth: true,
+        },
       }
     ]
   },
