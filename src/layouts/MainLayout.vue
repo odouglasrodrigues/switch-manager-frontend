@@ -5,7 +5,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img src="../../public/icons/logo-white.png">
           </q-avatar>
           Switch Manager
         </q-toolbar-title>
