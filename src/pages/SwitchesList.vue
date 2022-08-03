@@ -8,7 +8,7 @@
       </q-card-section>
       <q-separator dark />
       <q-card-actions vertical>
-        <q-btn flat @click="selectedSwitch = sw; cardPortList = !cardPortList; GetPortList(sw)" >Listar Portas</q-btn>
+        <q-btn flat @click="selectedSwitch = sw; cardPortList = !cardPortList; GetPortList(sw)">Listar Portas</q-btn>
       </q-card-actions>
     </q-card>
     <PortsList :cardPortList="cardPortList" :sw="selectedSwitch" :loadingPorts="loadingPorts" :interfaces="interfaces"
@@ -65,6 +65,16 @@ export default defineComponent({
         const { interfaces } = response.dados
         this.interfaces = interfaces
         this.loadingPorts = false
+
+        if (response.status == 'erro') {
+          this.loadingPorts = false
+          this.cardPortList = !this.cardPortList
+          this.$q.notify({
+            type: 'negative',
+            message: response.message
+          })
+          return
+        }
 
       } catch (error) {
         swal({
