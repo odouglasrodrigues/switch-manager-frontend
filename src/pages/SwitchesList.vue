@@ -1,7 +1,7 @@
 <template>
 
-  <div class="q-pa-md row items-start q-gutter-md">
-    <q-card v-for="sw in switches" :key="sw.ip" class="my-card bg-green text-white" style="min-width: 40vw;">
+  <div class="container fit row justify-start items-start content-start">
+    <q-card v-for="sw in switches" :key="sw.ip" class="my-card bg-green text-white" :style="ScreenWidth">
       <q-card-section>
         <div style="font-size:clamp(1.1em, 3vw, 1.5em);">{{ sw.name }}</div>
         <div style="font-size:clamp(1em, 2vw, 1.2em);">IP: {{ sw.ip }}</div>
@@ -85,6 +85,19 @@ export default defineComponent({
       }
     },
   },
+  computed:{
+    ScreenWidth : function(){
+      if(this.$q.screen.xs){
+        return "width: 40vw; margin:1em;"
+      }
+      if(this.$q.screen.sm){
+        return "width: 28vw; margin:1em;"
+      }
+      if(this.$q.screen.md){
+        return "width: 20vw; margin:1em;"
+      }
+    }
+  },
   async created() {
     await this.GetSwitchList();
   },
@@ -93,4 +106,12 @@ export default defineComponent({
 </script>
 
 <style>
+.container {
+  min-height: 100vh;
+  padding-top: 1em;
+  padding-left: 1.3em;
+
+
+
+}
 </style>
