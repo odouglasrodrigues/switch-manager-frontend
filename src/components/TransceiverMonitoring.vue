@@ -7,20 +7,19 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-
-        <div v-if="cardLoading" class="loading" align="center">
-          <q-spinner-pie color="primary" size="8vw" />
-          <div style="width: 50vw; font-size: 5vw;">
-            Carregando...
-          </div>
-        </div>
-
-        <div v-else-if="transceiverIsPresent == 'no'" class="fit row  justify-center items-center content-center">
+        <div v-if="transceiverIsPresent == 'no'" class="fit row  justify-center items-center content-center">
           <div class="text-h6">
             <q-icon name="warning" color="yellow" />
             SFP Não está conectado!
           </div>
 
+        </div>
+
+        <div v-else-if="cardLoading" class="loading" align="center">
+          <q-spinner-pie color="primary" size="8vw" />
+          <div style="width: 50vw; font-size: 5vw;">
+            Carregando...
+          </div>
         </div>
 
         <div v-else class="q-pa-md column justify-center q-gutter-md">
@@ -94,7 +93,7 @@ export default defineComponent({
   methods: {
     CloseCardTransceiver() {
       this.$emit('CloseCardTransceiver')
-      this.cardLoading = false
+      this.cardLoading = true
       this.remaingTime = 64
     },
     StartCountdown() {

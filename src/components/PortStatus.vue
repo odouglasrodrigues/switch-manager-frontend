@@ -39,7 +39,8 @@
     </q-card>
   </q-dialog>
   <TransceiverMonitoring :cardTransceiverStatus="cardTransceiverStatus" :interfaceName="interfaceName"
-    :transceiverIsPresent="portStatus.transceiverIsPresent" :loadingTransceiverStatus="loadingTransceiverStatus" v-on:CloseCardTransceiver="cardTransceiverStatus = false" />
+    :transceiverIsPresent="portStatus.transceiverIsPresent" :loadingTransceiverStatus="loadingTransceiverStatus"
+    v-on:CloseCardTransceiver="cardTransceiverStatus = false" />
 
 </template>
 
@@ -63,25 +64,25 @@ export default defineComponent({
       splitterModel: ref(20),
       loadingStatusPortChange: ref(false),
       cardTransceiverStatus: ref(false),
-      loadingTransceiverStatus: ref(false)
+
     };
   },
   data() {
-    return {};
+    return { loadingTransceiverStatus: true };
   },
   methods: {
     CloseCardPortStatus() {
       this.$emit("CloseCardPortStatus");
+      this.loadingTransceiverStatus = true
     },
-    async MonitorarSinal() {
-      try {
+    MonitorarSinal() {
+      if (this.portStatus.transceiverIsPresent == 'yes') {
+        this.loadingTransceiverStatus = true
         this.cardTransceiverStatus = true
-        if(this.portStatus.transceiverIsPresent=='yes'){
-          this.$socket.emit('StartMonitoring', {ip:this.sw.ip, user:this.sw.user, pass:this.sw.password, port:this.sw.port, interface:this.interfaceName, tempo:60})
-        }
-      }
-      catch (error) {
-
+        this.$socket.emit('StartMonitoring', { ip: this.sw.ip, user: this.sw.user, pass: this.sw.password, port: this.sw.port, interface: this.interfaceName, tempo: 60 })
+      } else {
+        this.loadingTransceiverStatus = false
+        this.cardTransceiverStatus = true
       }
     },
     async TurnOnOffInterface(turnONOFF) {
