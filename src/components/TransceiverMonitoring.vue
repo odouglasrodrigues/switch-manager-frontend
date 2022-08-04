@@ -94,7 +94,7 @@ export default defineComponent({
   methods: {
     CloseCardTransceiver() {
       this.$emit('CloseCardTransceiver')
-      this.cardLoading = true
+      this.cardLoading = false
       this.remaingTime = 64
     },
     StartCountdown() {
