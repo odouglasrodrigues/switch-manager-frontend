@@ -40,7 +40,7 @@ export default defineComponent({
   name: 'Login',
   setup() {
     return {
-      version: '1.0.8',
+      version: '1.1.0',
       isPwd: ref(true),
       email: ref(''),
       password: ref(''),
