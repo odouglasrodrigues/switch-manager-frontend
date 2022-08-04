@@ -63,7 +63,7 @@ export default defineComponent({
       splitterModel: ref(20),
       loadingStatusPortChange: ref(false),
       cardTransceiverStatus: ref(false),
-      loadingTransceiverStatus: ref(true)
+      loadingTransceiverStatus: ref(false)
     };
   },
   data() {
