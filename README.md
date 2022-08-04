@@ -21,4 +21,4 @@ quasar build
 ```
 
 ### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+> On ```.env``` set the host to api connction and socketIo connection

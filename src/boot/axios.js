@@ -7,8 +7,8 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const host = process.env.HOST || '192.168.0.36'
-const api = axios.create({ baseURL: `http://${host}:3000` })
+const host = process.env.HOST_API || 'http://localhost:3000'
+const api = axios.create({ baseURL: `${host}` })
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
